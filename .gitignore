@@ -17,3 +17,4 @@ sig
 
 **/validator-cache
 **/validator-binaries
+*.json
