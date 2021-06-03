@@ -1,9 +1,20 @@
 **/node_modules
 **/out
 
+.vscode-test/
+*.vsix
+**.DS_Store
 binaries/*
-!binaries/1.0.7
+!binaries/3.2.84
 
 registration_key
 auth
 sig
+
+
+.idea/
+*.iml
+
+**/validator-cache
+**/validator-binaries
+*.json

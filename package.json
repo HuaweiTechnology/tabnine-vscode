@@ -1,60 +1,444 @@
 {
-	"name": "tabnine-vscode",
-	"version": "1.1.0",
-	"displayName": "TabNine",
-	"description": "All-language autocompleter — TabNine uses machine learning to help you write code faster.",
-	"icon": "small_logo.png",
-	"author": "Jacob Jackson",
-	"publisher": "TabNine",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/zxqfl/tabnine-vscode"
-	},
-	"bugs": {
-		"url": "https://github.com/zxqfl/tabnine-vscode/issues"
-	},
-	"engines": {
-		"vscode": "^1.26.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"*"
-	],
-	"main": "./out/extension",
-	"scripts": {
-		"vscode:prepublish": "tsc -p ./",
-		"compile": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"tslint": "tslint -c tslint.json src/extension.ts"
-	},
-	"devDependencies": {
-		"@types/node": "^6.0.40",
-		"typescript": "^2.1.4",
-		"vscode": "^1.1.21"
-	},
-	"dependencies": {
-		"semver": "^5.1.1",
-		"await-semaphore": "^0.1.3"
-	},
-	"contributes": {
-		"configuration": [
-			{
-				"title": "TabNine",
-				"properties": {
-					"tabnine.disable_line_regex": {
-						"type": "array",
-						"default": [],
-						"description": "Disable TabNine when the current line contains a match of any of the provided regexes. For example, add \"require\" to disable TabNine when the current line contains the word 'require'."
-					},
-					"tabnine.disable_file_regex": {
-						"type": "array",
-						"default": [],
-						"description": "Disable TabNine when the file path contains a match of any of the provided regexes. For example, add \"[.]js$\" to disable TabNine in JavaScript files."
-					}
-				}
-			}
-		]
-	}
+  "publisher": "TabNine",
+  "name": "tabnine-vscode",
+  "version": "3.1.26",
+  "displayName": "Tabnine Autocomplete AI: JavaScript, Python, TypeScript, PHP, Go, Java, Ruby, C/C++, HTML/CSS, C#, Rust, SQL, Bash, Kotlin, React",
+  "description": "JavaScript, Python, Java, Typescript & all other languages - AI Code completion plugin. Tabnine makes developers more productive by auto-completing their code.",
+  "icon": "small_logo.png",
+  "author": "Tabnine <support@tabnine.com> (https://tabnine.com/)",
+  "license": "License at https://tabnine.com/eula",
+  "galleryBanner": {
+    "color": "#100f11",
+    "theme": "dark"
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/github/stars/codota/Tabnine?style=social",
+      "description": "Star Tabnine on Github",
+      "href": "https://bit.ly/36iGtUU"
+    },
+    {
+      "url": "https://img.shields.io/twitter/follow/Tabnine_?style=social",
+      "description": "Follow Tabnine on Twitter",
+      "href": "https://bit.ly/2WHsEtD"
+    },
+    {
+      "url": "https://img.shields.io/visual-studio-marketplace/r/TabNine.tabnine-vscode?logo=visual-studio-code&style=social",
+      "description": "Rate us in VSCode Marketplace",
+      "href": "https://bit.ly/3pqj7o2"
+    },
+    {
+      "url": "https://img.shields.io/youtube/views/TKLkXh_c-Gw?style=social",
+      "description": "Watch Tabnine demo video",
+      "href": "https://bit.ly/36slY7c"
+    }
+  ],
+  "homepage": "https://tabnine.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codota/tabnine-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/codota/tabnine-vscode/issues",
+    "email": "support@tabnine.com"
+  },
+  "engines": {
+    "vscode": "^1.29.0",
+    "node": ">=10.0.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "javascript",
+    "python",
+    "typescript",
+    "php",
+    "autocomplete",
+    "ruby",
+    "java",
+    "go",
+    "golang",
+    "bash",
+    "kotlin",
+    "html",
+    "css",
+    "ocaml",
+    "perl",
+    "rust",
+    "julia",
+    "lua",
+    "haskell",
+    "c",
+    "cpp",
+    "c++",
+    "csharp",
+    "c#",
+    "react",
+    "swift",
+    "objective-c",
+    "objectivec",
+    "ai",
+    "method completion",
+    "intellicode",
+    "intellisense",
+    "snippets",
+    "kite"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension",
+  "scripts": {
+    "vscode:prepublish": "npm i && tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "build": "tsc -p ./",
+    "test:copyassets": "ncp ./src/test/fixture ./out/test/fixture/",
+    "prettier": "prettier --write src/",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "vscode:uninstall": "node ./out/uninstall",
+    "test": "npm run clear-out && tsc -p ./ && npm run test:copyassets && node ./out/test/runTest.js",
+    "vsce:package": "vsce package",
+    "vsce:publish": "vsce publish",
+    "teamcity:test": "tsc -p ./ && node ./out/test/runTest.js",
+    "clear-out": "rimraf ./out"
+  },
+  "peerDependencies": {
+    "vscode": "^1.1.37"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^10.0.0",
+    "@types/semver": "^7.3.4",
+    "@types/sinon": "^9.0.8",
+    "@types/tmp": "^0.2.0",
+    "@types/vscode": "^1.29.0",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.11.1",
+    "assert": "^2.0.0",
+    "chai": "^4.2.0",
+    "chai-shallow-deep-equal": "^1.4.6",
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "glob": "^7.1.6",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
+    "mocha": "^8.2.1",
+    "mocha-teamcity-reporter": "^3.0.0",
+    "ncp": "^2.0.0",
+    "prettier": "2.2.1",
+    "rimraf": "^3.0.2",
+    "sinon": "^9.2.1",
+    "typemoq": "^2.1.0",
+    "typescript": "^4.1.3",
+    "vsce": "^1.81.1",
+    "vscode-test": "^1.4.1"
+  },
+  "dependencies": {
+    "await-semaphore": "^0.1.3",
+    "semver": "^7.3.2",
+    "tmp": "^0.2.1"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "python",
+        "aliases": [
+          "Python",
+          "py",
+          "python"
+        ]
+      },
+      {
+        "id": "javascript",
+        "aliases": [
+          "JavaScript",
+          "Javascript",
+          "js",
+          "javascript"
+        ]
+      },
+      {
+        "id": "java",
+        "aliases": [
+          "java",
+          "Java"
+        ]
+      },
+      {
+        "id": "cpp",
+        "aliases": [
+          "cpp",
+          "c++",
+          "C++"
+        ]
+      },
+      {
+        "id": "c",
+        "aliases": [
+          "c",
+          "C"
+        ]
+      },
+      {
+        "id": "php",
+        "aliases": [
+          "php",
+          "PHP",
+          "Php"
+        ]
+      },
+      {
+        "id": "go",
+        "aliases": [
+          "go",
+          "Go",
+          "golang",
+          "Golang"
+        ]
+      },
+      {
+        "id": "csharp",
+        "aliases": [
+          "csharp",
+          "Csharp",
+          "CSharp",
+          "cs",
+          "c#",
+          "C#"
+        ]
+      },
+      {
+        "id": "ruby",
+        "aliases": [
+          "ruby",
+          "rb",
+          "Ruby"
+        ]
+      },
+      {
+        "id": "objective-c",
+        "aliases": [
+          "objective-c",
+          "m",
+          "objectivec",
+          "Objective-C"
+        ]
+      },
+      {
+        "id": "rust",
+        "aliases": [
+          "Rust",
+          "rs",
+          "rust"
+        ]
+      },
+      {
+        "id": "swift",
+        "aliases": [
+          "Swift",
+          "swift"
+        ]
+      },
+      {
+        "id": "typescript",
+        "aliases": [
+          "typescript",
+          "Typescript",
+          "TypeScript",
+          "ts"
+        ]
+      },
+      {
+        "id": "haskell",
+        "aliases": [
+          "Haskell",
+          "hs",
+          "haskell"
+        ]
+      },
+      {
+        "id": "julia",
+        "aliases": [
+          "Julia",
+          "jl",
+          "julia"
+        ]
+      },
+      {
+        "id": "ocaml",
+        "aliases": [
+          "ocaml",
+          "ml",
+          "OCaml"
+        ]
+      },
+      {
+        "id": "scala",
+        "aliases": [
+          "scala",
+          "Scala"
+        ]
+      },
+      {
+        "id": "kotlin",
+        "aliases": [
+          "kotlin",
+          "kt",
+          "Kotlin"
+        ]
+      },
+      {
+        "id": "perl",
+        "aliases": [
+          "perl",
+          "pl",
+          "Perl"
+        ]
+      },
+      {
+        "id": "sql",
+        "aliases": [
+          "sql",
+          "SQL"
+        ]
+      },
+      {
+        "id": "html",
+        "aliases": [
+          "Html",
+          "HTML",
+          "html"
+        ]
+      },
+      {
+        "id": "css",
+        "aliases": [
+          "CSS",
+          "css"
+        ]
+      },
+      {
+        "id": "less",
+        "aliases": [
+          "less",
+          "Less"
+        ]
+      },
+      {
+        "id": "scss",
+        "aliases": [
+          "scss"
+        ]
+      },
+      {
+        "id": "shellscript",
+        "aliases": [
+          "bash",
+          "Bash",
+          "sh",
+          "shell",
+          "shellscript",
+          "Shellscript"
+        ]
+      },
+      {
+        "id": "lua",
+        "aliases": [
+          "Lua"
+        ]
+      },
+      {
+        "id": "javascriptreact",
+        "aliases": [
+          "react",
+          "React",
+          "reactjs"
+        ]
+      },
+      {
+        "id": "typescriptreact"
+      }
+    ],
+    "commands": [
+      {
+        "command": "TabNine::config",
+        "title": "Tabnine: Open Settings"
+      },
+      {
+        "command": "TabNine::validatorClearCache",
+        "title": "Tabnine: Clear Validator Cache"
+      },
+      {
+        "command": "TabNine::validatorSetThreshold",
+        "title": "Tabnine: Set Validator Threshold"
+      },
+      {
+        "command": "TabNine::validatorToggle",
+        "title": "Tabnine: Toggle Validator"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "TabNine::validatorClearCache",
+          "when": "tabnine-validator:enabled && tabnine-validator:background"
+        },
+        {
+          "command": "TabNine::validatorSetThreshold",
+          "when": "tabnine-validator:enabled && tabnine-validator:background"
+        },
+        {
+          "command": "TabNine::validatorToggle",
+          "when": "tabnine-validator:capability"
+        }
+      ]
+    },
+    "configuration": [
+      {
+        "title": "Tabnine",
+        "properties": {
+          "tabnine.disable_line_regex": {
+            "type": "array",
+            "default": [],
+            "description": "Disable Tabnine when the current line contains a match of any of the provided regexes. For example, add \"require\" to disable Tabnine when the current line contains the word 'require'."
+          },
+          "tabnine.disable_file_regex": {
+            "type": "array",
+            "default": [],
+            "description": "Disable Tabnine when the file path contains a match of any of the provided regexes. For example, add \"[.]js$\" to disable Tabnine in JavaScript files."
+          },
+          "tabnine.experimentalAutoImports": {
+            "type": [
+              "boolean",
+              null,
+              "number"
+            ],
+            "default": null,
+            "description": "Experimental: Enable modules auto-import following applying Tabnine suggestions"
+          },
+          "tabnine.logFilePath": {
+            "type": "string",
+            "description": "Tabnine's log file (Visual Studio Code must be restarted for this setting to take effect)"
+          }
+        }
+      }
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run lint:fix"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
+  }
 }
